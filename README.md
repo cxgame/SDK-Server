@@ -96,7 +96,7 @@ message | String | 出错信息
 
 	php
 
-```
+```php
 	//接收POST参数
 	$order_id            = $_POST['order_id'];          //SDK订单号
 	$out_order_id        = $_POST['out_order_id'];      //游戏订单号
@@ -127,7 +127,7 @@ message | String | 出错信息
 
 	java
 
-```
+```java
 	public static String getpreSignString(Map<String, String> params, String signKey) {
 	    StringBuffer content = new StringBuffer();
 	
