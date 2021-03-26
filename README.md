@@ -37,7 +37,7 @@ extends_par1 | String | 额外参数1 与请求支付时的额外参数1一致
 extends_par2 | String | 额外参数2 与请求支付时的额外参数2一致
 sign | String | 签名（具体请参考[签名说明](#签名说明)）
 
-* body 示例
+body 示例
 	
 	cost_amount=1&finish_ts=2021-03-09 14:53:30&out_order_id=210480&sign=3b6bc3ff5294bb995640c82c4a624767&game_account=cx030315437&extends_par2=额外参数2&state=SUCCESS&extends_par1=额外参数1&order_id=x210309144147192HT
 
