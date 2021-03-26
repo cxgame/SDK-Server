@@ -1,6 +1,11 @@
 畅想互动服务端接入文档
 =================
 
+请求说明
+-------------
+* 本文档所提及所有post请求均为表单提交
+* "content-type": "application/x-www-form-urlencoded"
+
 
 参数说明
 -------------
@@ -32,6 +37,24 @@ extends_par1 | String | 额外参数1 与请求支付时的额外参数1一致
 extends_par2 | String | 额外参数2 与请求支付时的额外参数2一致
 sign | String | 签名（具体请参考[签名说明](#签名说明)）
 
+* body 示例
+	
+	cost_amount=1&finish_ts=2021-03-09 14:53:30&out_order_id=210480&sign=3b6bc3ff5294bb995640c82c4a624767&game_account=cx030315437&extends_par2=额外参数2&state=SUCCESS&extends_par1=额外参数1&order_id=x210309144147192HT
+
+返利回调接口
+-------------
+
+* 当通过一定策略产生返利订单并生效后，会根据后台填入的异步通知地址，通过POST请求的形式将返利信息通知到系统
+* 返利回调接口必须返回字符串“success”（不包含引号）以表示CP正确收到了通知。如果返回的字符不是success这7个字符，服务器会按照一定的策略在之后的时间再进行几次通知直到收到正确返回。若在策略通知内全未收到正确返回服务器将不再通知。
+* **CP必须要有处理重复通知的逻辑**
+* 异步通知参数
+
+参数名 | 类型 | 说明   
+:------- |:------- | :-----------
+rebate_order_id | string | 返利订单号
+* | * | 同支付回调参数
+
+
 订单查询
 -------------
 * 当CP未收到回调或其他原因导致支付结果信息丢失时可以主动调用查询接口进行查询
@@ -58,7 +81,28 @@ message | String | 出错信息
 
 **这里先验证code和message，并且code和message不参与签名**
 	
+请求示例
 
+	curl -X POST \
+	  https://api.cxgame.net/YrjhK/query-result \
+	  -H 'Content-Type: application/x-www-form-urlencoded' \
+	  -d 'game_key=xx&order_id=xx&sign=xx'
+
+返回示例
+	
+	{
+		"code": 200,
+		"cost_amount": "1",
+		"finish_ts": "1970-01-01 08:00:00",
+		"out_order_id": "xx",
+		"sign": "xx",
+		"game_account": "xx",
+		"extends_par2": null,
+		"state": "FAIL",
+		"extends_par1": null,
+		"message": "成功",
+		"order_id": "xx"
+	}
 
 签名说明
 -------------
@@ -177,3 +221,17 @@ token | String | 登录返回的token
 code | Integer | 错误代码，200表示查询业务成功
 message | String | 出错信息
 uid | String | 用户唯一标识
+
+请求示例
+
+	curl -X POST \
+	  https://api.cxgame.net/app/sdk/v1/verify-token \
+	  -H 'Content-Type: application/x-www-form-urlencoded' \
+	  -d token=abc
+
+返回示例
+	
+	{
+	    "code": 1005,
+	    "message": "无效token"
+	}
